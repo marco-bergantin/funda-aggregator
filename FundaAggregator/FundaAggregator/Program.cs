@@ -18,7 +18,9 @@ var httpClient = serviceProvider.GetService<HttpClient>();
 
 var apiClient = new FundaPartnerApiClient(httpClient, apiKey);
 
-var results = await apiClient.GetResultsAsync();
+var results = await apiClient.GetAllResultsAsync();
+
+Console.WriteLine($"{results.Objects.Length} listings found{Environment.NewLine}");
 
 var tableRows = string.Join(Environment.NewLine, 
     results.Objects.Select(o => 

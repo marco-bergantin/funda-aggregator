@@ -71,22 +71,22 @@ public class Object
     public bool IsVerhuurd { get; set; }
     public bool IsVerkocht { get; set; }
     public bool IsVerkochtOfVerhuurd { get; set; }
-    public int Koopprijs { get; set; }
+    public int? Koopprijs { get; set; }
     public string KoopprijsFormaat { get; set; }
-    public int KoopprijsTot { get; set; }
+    public int? KoopprijsTot { get; set; }
     public object Land { get; set; }
     public int MakelaarId { get; set; }
     public string MakelaarNaam { get; set; }
     public string MobileURL { get; set; }
     public object Note { get; set; }
     public int Oppervlakte { get; set; }
-    public int Perceeloppervlakte { get; set; }
+    public int? Perceeloppervlakte { get; set; }
     public string Postcode { get; set; }
-    public Prijs Prijs { get; set; }
     public string PrijsGeformatteerdHtml { get; set; }
     public string PrijsGeformatteerdTextHuur { get; set; }
     public string PrijsGeformatteerdTextKoop { get; set; }
     public string[] Producten { get; set; }
+
     public object ProjectNaam { get; set; }
     public string PublicatieDatum { get; set; } // TODO: check later
     public int PublicatieStatus { get; set; }
@@ -108,19 +108,4 @@ public class Object
     public int Woonoppervlakte { get; set; }
     public string Woonplaats { get; set; }
     public int[] ZoekType { get; set; }
-}
-
-public class Prijs
-{
-    public bool GeenExtraKosten { get; set; }
-    public string HuurAbbreviation { get; set; }
-    public object Huurprijs { get; set; }
-    public string HuurprijsOpAanvraag { get; set; }
-    public object HuurprijsTot { get; set; }
-    public string KoopAbbreviation { get; set; }
-    public int Koopprijs { get; set; }
-    public string KoopprijsOpAanvraag { get; set; }
-    public int KoopprijsTot { get; set; }
-    public object OriginelePrijs { get; set; }
-    public string VeilingText { get; set; }
 }
