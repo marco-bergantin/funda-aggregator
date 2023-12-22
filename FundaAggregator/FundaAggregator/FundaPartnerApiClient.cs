@@ -3,7 +3,7 @@ using System.Net.Http.Json;
 
 namespace FundaAggregator
 {
-    internal class FundaPartnerApiClient
+    public class FundaPartnerApiClient
     {
         private static string baseUrl = "http://partnerapi.funda.nl/feeds/Aanbod.svc/json";
 
