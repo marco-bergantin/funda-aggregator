@@ -27,3 +27,13 @@ var tableRows = string.Join(Environment.NewLine,
         $"| {o.Id} | {o.Adres} | {o.KoopprijsTot} | {o.MakelaarId} | {o.MakelaarNaam} |"));
 
 Console.WriteLine(tableRows);
+Console.WriteLine(Environment.NewLine);
+
+var aggregatedResults = ResultsAggregator.GetTopMakelaars(results, 10);
+
+Console.WriteLine("TOP 10 Makelaars");
+
+var top10MakelaarsTable = string.Join(Environment.NewLine,
+    aggregatedResults.Keys.Select(makelaarId => $"| {makelaarId} | {aggregatedResults[makelaarId]} |"));
+
+Console.WriteLine(top10MakelaarsTable);
