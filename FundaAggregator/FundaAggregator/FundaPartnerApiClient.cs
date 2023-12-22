@@ -1,25 +1,44 @@
 ﻿using FundaAggregator.Model;
+using Polly.Retry;
+using Polly;
 using System.Net.Http.Json;
 
 namespace FundaAggregator
 {
     public class FundaPartnerApiClient
     {
-        private static string baseUrl = "http://partnerapi.funda.nl/feeds/Aanbod.svc/json";
+        private const string baseUrl = "http://partnerapi.funda.nl/feeds/Aanbod.svc/json";
 
-        private HttpClient _httpClient;
-        private string _key;
+        private readonly ResiliencePipeline _retryPipeline;
+        private readonly HttpClient _httpClient;
+        private readonly string _key;
 
         public FundaPartnerApiClient(HttpClient httpClient, string apiKey)
         {
             _httpClient = httpClient;
             _key = apiKey;
+
+            _retryPipeline = new ResiliencePipelineBuilder()
+                .AddRetry(new RetryStrategyOptions
+                {
+                    Delay = TimeSpan.FromMilliseconds(50)
+                })
+                .Build();
         }
 
         public async Task<ApiResultObject> GetResultsAsync(int page = 1, int pageSize = 25)
         {
             var uri = new Uri($"{baseUrl}/{_key}/?type=koop&zo=/amsterdam/tuin/&page={page}&pagesize={pageSize}");
-            var results = await _httpClient.GetFromJsonAsync<ApiResultObject>(uri);
+
+            var response = await _retryPipeline.ExecuteAsync(async (cancellationToken) =>
+            {
+                var responseMessage = await _httpClient.GetAsync(uri, cancellationToken);
+                responseMessage.EnsureSuccessStatusCode();
+                return responseMessage;
+            });
+
+            var results = await response.Content.ReadFromJsonAsync<ApiResultObject>();
+
             return results;
         }
 
@@ -36,8 +55,6 @@ namespace FundaAggregator
 
                 moreData = pagedResults.Paging.HuidigePagina < pagedResults.Paging.AantalPaginas;
                 currentPage = pagedResults.Paging.HuidigePagina + 1;
-
-                await Task.Delay(100); // TODO: implement proper solution for not getting throttled
             }
 
             return new ApiResultObject { Objects = [.. allResults] };
