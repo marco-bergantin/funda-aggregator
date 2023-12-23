@@ -18,9 +18,10 @@ public class FundaPartnerApiClientTests
         }]);
 
         var sut = new FundaPartnerApiClient(new HttpClient(testHttpMessageHandler),
+            new Uri("https://localhost:8080/doesn-matter-for-these-tests"),
             "key-doesnt-matter-here");
 
-        var results = await sut.GetResultsAsync();
+        var results = await sut.GetResultsAsync("test", "/whatever/irrelevant/");
 
         Assert.NotNull(results);
         Assert.NotNull(results.Objects);
@@ -84,9 +85,10 @@ public class FundaPartnerApiClientTests
         ]);
 
         var sut = new FundaPartnerApiClient(new HttpClient(testHttpMessageHandler),
+            new Uri("https://localhost:8080/doesn-matter-for-these-tests"),
             "key-doesnt-matter-here");
 
-        var results = await sut.GetAllResultsAsync();
+        var results = await sut.GetAllResultsAsync("test", "/whatever/irrelevant/");
 
         Assert.NotNull(results);
         Assert.NotNull(results.Objects);
@@ -178,9 +180,10 @@ public class FundaPartnerApiClientTests
         ]);
 
         var sut = new FundaPartnerApiClient(new HttpClient(testHttpMessageHandler),
+            new Uri("https://localhost:8080/doesn-matter-for-these-tests"),
             "key-doesnt-matter-here");
 
-        var results = await sut.GetAllResultsAsync();
+        var results = await sut.GetAllResultsAsync("test", "/whatever/irrelevant/");
 
         Assert.NotNull(results);
         Assert.NotNull(results.Objects);

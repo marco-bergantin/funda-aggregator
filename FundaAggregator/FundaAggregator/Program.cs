@@ -1,24 +1,35 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using FundaAggregator;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 var config = new ConfigurationBuilder()
     .AddUserSecrets<Program>()
+    .AddJsonFile("appSettings.json")
     .Build();
 
-// dotnet user-secrets set "FundaPartnerApiKey" "<your-key>"
-var apiKey = config["FundaPartnerApiKey"];
+var apiKey = config[SettingKeys.ApiSecret];
+if (string.IsNullOrWhiteSpace(apiKey))
+{
+    throw new ArgumentException($"{SettingKeys.ApiSecret} not set in user secrets. " +
+        $"Please run 'dotnet user-secrets set \"FundaPartnerApiKey\" \"<your-key>\"'");
+}
 
-var services = new ServiceCollection();
-services.AddHttpClient();
-var serviceProvider = services.BuildServiceProvider();
+var baseApiUrl = config[SettingKeys.ApiBaseUrl];
+if (string.IsNullOrWhiteSpace(baseApiUrl) 
+    || !Uri.TryCreate(baseApiUrl, UriKind.Absolute, out var baseApiUri))
+{
+    throw new ArgumentException($"{SettingKeys.ApiBaseUrl} not a valid uri. " +
+        $"Please provide a valid absolute uri in appSettings.json");
+}
 
-var httpClient = serviceProvider.GetService<HttpClient>();
+using var httpClient = new HttpClient();
 
-var apiClient = new FundaPartnerApiClient(httpClient, apiKey);
+var apiClient = new FundaPartnerApiClient(httpClient, baseApiUri, apiKey);
 
-var results = await apiClient.GetAllResultsAsync();
+Console.WriteLine("Fetching results from funda partner api...");
+Console.WriteLine(Environment.NewLine);
+
+var results = await apiClient.GetAllResultsAsync("koop", "/amsterdam/tuin/");
 
 Console.WriteLine($"{results.Objects.Length} listings found{Environment.NewLine}");
 
