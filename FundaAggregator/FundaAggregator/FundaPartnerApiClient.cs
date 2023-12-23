@@ -45,24 +45,24 @@ public class FundaPartnerApiClient
 
     public async Task<ApiResultObject> GetAllResultsAsync(string type, string searchQuery)
     {
-        var allResults = new List<Model.Object>();
+        var allResults = new List<Listing>();
         var moreData = true;
         var currentPage = 1;
 
         while (moreData)
         {
             var pagedResults = await GetResultsAsync(type, searchQuery, currentPage);
-            if (pagedResults?.Objects is null)
+            if (pagedResults?.Listings is null)
             {
                 break;
             }
 
-            allResults.AddRange(pagedResults.Objects);
+            allResults.AddRange(pagedResults.Listings);
 
             moreData = pagedResults.Paging.HuidigePagina < pagedResults.Paging.AantalPaginas;
             currentPage = pagedResults.Paging.HuidigePagina + 1;
         }
 
-        return new ApiResultObject { Objects = [.. allResults] };
+        return new ApiResultObject { Listings = [.. allResults] };
     }
 }

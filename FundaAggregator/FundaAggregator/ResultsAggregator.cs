@@ -8,7 +8,7 @@ public class ResultsAggregator
     {
         var listingsPerMakelaar = new Dictionary<int, int>();
 
-        foreach (var listing in results.Objects)
+        foreach (var listing in results.Listings)
         {
             if (listingsPerMakelaar.TryGetValue(listing.MakelaarId, out int value))
             {

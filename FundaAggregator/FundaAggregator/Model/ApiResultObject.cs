@@ -10,7 +10,8 @@ public class ApiResultObject
     public object ValidationReport { get; set; }
     public int Website { get; set; }
     public Metadata Metadata { get; set; }
-    public Object[] Objects { get; set; }
+    [JsonPropertyName("Objects")]
+    public Listing[] Listings { get; set; }
     public Paging Paging { get; set; }
     public int TotaalAantalObjecten { get; set; }
 }
@@ -30,7 +31,7 @@ public class Paging
     public object VorigeUrl { get; set; }
 }
 
-public class Object
+public class Listing
 {
     public string AangebodenSindsTekst { get; set; }
     public string AanmeldDatum { get; set; } // TODO: check later

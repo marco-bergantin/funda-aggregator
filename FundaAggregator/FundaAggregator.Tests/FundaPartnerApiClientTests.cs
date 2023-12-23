@@ -24,10 +24,10 @@ public class FundaPartnerApiClientTests
         var results = await sut.GetResultsAsync("test", "/whatever/irrelevant/");
 
         Assert.NotNull(results);
-        Assert.NotNull(results.Objects);
+        Assert.NotNull(results.Listings);
 
-        Assert.Equal(3, results.Objects.Length);
-        Assert.True(results.Objects.All(o => !string.IsNullOrWhiteSpace(o.Id) && o.Koopprijs > 0));
+        Assert.Equal(3, results.Listings.Length);
+        Assert.True(results.Listings.All(o => !string.IsNullOrWhiteSpace(o.Id) && o.Koopprijs > 0));
     }
 
     [Fact]
@@ -35,13 +35,13 @@ public class FundaPartnerApiClientTests
     {
         var firstPageContent = new ApiResultObject
         {
-            Objects = 
+            Listings = 
             [
-                new Model.Object 
+                new Listing 
                 {
                     Id = "0"
                 },
-                new Model.Object
+                new Listing
                 {
                     Id = "1"
                 }
@@ -55,13 +55,13 @@ public class FundaPartnerApiClientTests
 
         var secondPageContent = new ApiResultObject
         {
-            Objects =
+            Listings =
             [
-                new Model.Object
+                new Listing
                 {
                     Id = "2"
                 },
-                new Model.Object
+                new Listing
                 {
                     Id = "3"
                 }
@@ -91,13 +91,13 @@ public class FundaPartnerApiClientTests
         var results = await sut.GetAllResultsAsync("test", "/whatever/irrelevant/");
 
         Assert.NotNull(results);
-        Assert.NotNull(results.Objects);
+        Assert.NotNull(results.Listings);
 
-        Assert.Equal(4, results.Objects.Length);
+        Assert.Equal(4, results.Listings.Length);
 
-        for (int i = 0; i < results.Objects.Length; i++)
+        for (int i = 0; i < results.Listings.Length; i++)
         {
-            Assert.Equal(i.ToString(), results.Objects[i].Id);
+            Assert.Equal(i.ToString(), results.Listings[i].Id);
         }
     }
 
@@ -106,9 +106,9 @@ public class FundaPartnerApiClientTests
     {
         var firstPageContent = new ApiResultObject
         {
-            Objects =
+            Listings =
             [
-                new Model.Object
+                new Listing
                 {
                     Id = "0"
                 }
@@ -122,9 +122,9 @@ public class FundaPartnerApiClientTests
 
         var secondPageContent = new ApiResultObject
         {
-            Objects =
+            Listings =
             [
-                new Model.Object
+                new Listing
                 {
                     Id = "1"
                 }
@@ -138,9 +138,9 @@ public class FundaPartnerApiClientTests
 
         var thirdPageContent = new ApiResultObject
         {
-            Objects =
+            Listings =
             [
-                new Model.Object
+                new Listing
                 {
                     Id = "2"
                 }
@@ -186,13 +186,13 @@ public class FundaPartnerApiClientTests
         var results = await sut.GetAllResultsAsync("test", "/whatever/irrelevant/");
 
         Assert.NotNull(results);
-        Assert.NotNull(results.Objects);
+        Assert.NotNull(results.Listings);
 
-        Assert.Equal(3, results.Objects.Length);
+        Assert.Equal(3, results.Listings.Length);
 
-        for (int i = 0; i < results.Objects.Length; i++)
+        for (int i = 0; i < results.Listings.Length; i++)
         {
-            Assert.Equal(i.ToString(), results.Objects[i].Id);
+            Assert.Equal(i.ToString(), results.Listings[i].Id);
         }
     }
 }

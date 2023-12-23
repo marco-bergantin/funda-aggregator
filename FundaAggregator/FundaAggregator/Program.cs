@@ -31,10 +31,10 @@ Console.WriteLine(Environment.NewLine);
 
 var results = await apiClient.GetAllResultsAsync("koop", "/amsterdam/tuin/");
 
-Console.WriteLine($"{results.Objects.Length} listings found{Environment.NewLine}");
+Console.WriteLine($"{results.Listings.Length} listings found{Environment.NewLine}");
 
 var tableRows = string.Join(Environment.NewLine, 
-    results.Objects.Select(o => 
+    results.Listings.Select(o => 
         $"| {o.Id} | {o.Adres} | {o.KoopprijsTot} | {o.MakelaarId} | {o.MakelaarNaam} |"));
 
 Console.WriteLine(tableRows);
