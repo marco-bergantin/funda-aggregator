@@ -43,9 +43,8 @@ public class FundaPartnerApiClient
         return await response.Content.ReadFromJsonAsync<ApiResultObject>();
     }
 
-    public async Task<ApiResultObject> GetAllResultsAsync(string type, string searchQuery)
+    public async IAsyncEnumerable<Listing[]> GetAllResultsAsync(string type, string searchQuery)
     {
-        var allResults = new List<Listing>();
         var moreData = true;
         var currentPage = 1;
 
@@ -57,12 +56,10 @@ public class FundaPartnerApiClient
                 break;
             }
 
-            allResults.AddRange(pagedResults.Listings);
+            yield return pagedResults.Listings;
 
             moreData = pagedResults.Paging.HuidigePagina < pagedResults.Paging.AantalPaginas;
             currentPage = pagedResults.Paging.HuidigePagina + 1;
         }
-
-        return new ApiResultObject { Listings = [.. allResults] };
     }
 }

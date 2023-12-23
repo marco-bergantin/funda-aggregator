@@ -10,18 +10,18 @@ public class ResultsAggregatorTests
     {
         using var fileStream = File.OpenRead(@"..\..\..\Assets\example-reponse-for-aggregation.json");
         
-        var parsedApiResult = await JsonSerializer.DeserializeAsync<ApiResultObject>(fileStream);
+        var parsedResults = JsonSerializer.DeserializeAsyncEnumerable<Listing[]>(fileStream);
 
-        Assert.NotNull(parsedApiResult);
+        Assert.NotNull(parsedResults);
 
-        var topMakelaars = ResultsAggregator.GetTopMakelaars(parsedApiResult, 2);
+        var topMakelaars = await ResultsAggregator.GetTopMakelaars(parsedResults, 2);
 
-        Assert.Equal(2, topMakelaars.Count);
+        Assert.Equal(2, topMakelaars.Count());
 
-        Assert.Equal(24594, topMakelaars.Keys.First());
-        Assert.Equal(2, topMakelaars[24594]);
+        Assert.Equal(24594, topMakelaars.First().Key);
+        Assert.Equal(2, topMakelaars.First().Value);
 
-        Assert.Equal(24585, topMakelaars.Keys.ElementAt(1));
-        Assert.Equal(1, topMakelaars[24585]);
+        Assert.Equal(24585, topMakelaars.ElementAt(1).Key);
+        Assert.Equal(1, topMakelaars.ElementAt(1).Value);
     }
 }

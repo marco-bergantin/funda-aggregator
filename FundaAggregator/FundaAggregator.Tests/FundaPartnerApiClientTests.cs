@@ -88,17 +88,11 @@ public class FundaPartnerApiClientTests
             new Uri("https://localhost:8080/doesn-matter-for-these-tests"),
             "key-doesnt-matter-here");
 
-        var results = await sut.GetAllResultsAsync("test", "/whatever/irrelevant/");
+        var results = sut.GetAllResultsAsync("test", "/whatever/irrelevant/");
 
         Assert.NotNull(results);
-        Assert.NotNull(results.Listings);
 
-        Assert.Equal(4, results.Listings.Length);
-
-        for (int i = 0; i < results.Listings.Length; i++)
-        {
-            Assert.Equal(i.ToString(), results.Listings[i].Id);
-        }
+        await AssertOnResultsAsync(results, 4);
     }
 
     [Fact]
@@ -183,16 +177,25 @@ public class FundaPartnerApiClientTests
             new Uri("https://localhost:8080/doesn-matter-for-these-tests"),
             "key-doesnt-matter-here");
 
-        var results = await sut.GetAllResultsAsync("test", "/whatever/irrelevant/");
+        var results = sut.GetAllResultsAsync("test", "/whatever/irrelevant/");
 
         Assert.NotNull(results);
-        Assert.NotNull(results.Listings);
 
-        Assert.Equal(3, results.Listings.Length);
+        await AssertOnResultsAsync(results, 3);
+    }
 
-        for (int i = 0; i < results.Listings.Length; i++)
+    private async Task AssertOnResultsAsync(IAsyncEnumerable<Listing[]> results,
+        int expectedTotal)
+    {
+        var totalCounter = 0;
+        await foreach (var listingsBatch in results)
         {
-            Assert.Equal(i.ToString(), results.Listings[i].Id);
+            for (int i = 0; i < listingsBatch.Length; i++, totalCounter++)
+            {
+                Assert.Equal(totalCounter.ToString(), listingsBatch[i].Id);
+            }
         }
+
+        Assert.Equal(expectedTotal, totalCounter);
     }
 }

@@ -29,22 +29,23 @@ var apiClient = new FundaPartnerApiClient(httpClient, baseApiUri, apiKey);
 Console.WriteLine("Fetching results from funda partner api...");
 Console.WriteLine(Environment.NewLine);
 
-var results = await apiClient.GetAllResultsAsync("koop", "/amsterdam/tuin/");
-
-Console.WriteLine($"{results.Listings.Length} listings found{Environment.NewLine}");
-
-var tableRows = string.Join(Environment.NewLine, 
-    results.Listings.Select(o => 
+var results = apiClient.GetAllResultsAsync("koop", "/amsterdam/tuin/");
+await foreach (var listingsBatch in results)
+{
+    var tableRows = string.Join(Environment.NewLine, listingsBatch.Select(o =>
         $"| {o.Id} | {o.Adres} | {o.KoopprijsTot} | {o.MakelaarId} | {o.MakelaarNaam} |"));
 
-Console.WriteLine(tableRows);
-Console.WriteLine(Environment.NewLine);
+    Console.WriteLine(tableRows);
+}
 
-var aggregatedResults = ResultsAggregator.GetTopMakelaars(results, 10);
+Console.WriteLine(Environment.NewLine);
+Console.WriteLine("Processing results...");
+
+var aggregatedResults = await ResultsAggregator.GetTopMakelaars(results, 10);
 
 Console.WriteLine("TOP 10 Makelaars");
 
 var top10MakelaarsTable = string.Join(Environment.NewLine,
-    aggregatedResults.Keys.Select(makelaarId => $"| {makelaarId} | {aggregatedResults[makelaarId]} |"));
+    aggregatedResults.Select(makelaarData => $"| {makelaarData.Key} | {makelaarData.Value} |"));
 
 Console.WriteLine(top10MakelaarsTable);

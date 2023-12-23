@@ -1,15 +1,5 @@
-{
-  "AccountStatus": 0,
-  "EmailNotConfirmed": false,
-  "ValidationFailed": false,
-  "ValidationReport": null,
-  "Website": 0,
-  "Metadata": {
-    "ObjectType": "Koopwoningen",
-    "Omschrijving": "Koopwoningen > Amsterdam | Tuin",
-    "Titel": "Huizen te koop in Amsterdam"
-  },
-  "Objects": [
+[
+  [
     {
       "AangebodenSindsTekst": "20 december 2021",
       "AanmeldDatum": "/Date(1262300400000+0100)/",
@@ -286,7 +276,9 @@
       "ZoekType": [
         10
       ]
-    },
+    }
+  ],
+  [
     {
       "AangebodenSindsTekst": "15 december 2023",
       "AanmeldDatum": "/Date(1262300400000+0100)/",
@@ -428,12 +420,5 @@
         10
       ]
     }
-  ],
-  "Paging": {
-    "AantalPaginas": 25,
-    "HuidigePagina": 1,
-    "VolgendeUrl": "/~/koop/amsterdam/tuin/p2/",
-    "VorigeUrl": null
-  },
-  "TotaalAantalObjecten": 602
-}
+  ]
+]
