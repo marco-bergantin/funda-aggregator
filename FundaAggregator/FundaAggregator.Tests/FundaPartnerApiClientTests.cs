@@ -184,6 +184,41 @@ public class FundaPartnerApiClientTests
         await AssertOnResultsAsync(results, 3);
     }
 
+    [Fact]
+    public async Task TestApiClient_GetAllResultsAsync_FailsAfter4ConsecutiveErrors()
+    {
+        var testHttpMessageHandler = new TestHttpMessageHandler([
+            new HttpResponseMessage(HttpStatusCode.InternalServerError)
+            {
+                Content = new StringContent("Server side error!")
+            },
+            new HttpResponseMessage(HttpStatusCode.BadGateway)
+            {
+                Content = new StringContent("Whoops")
+            },
+            new HttpResponseMessage(HttpStatusCode.TooManyRequests)
+            {
+                Content = new StringContent("Come back later")
+            },
+            new HttpResponseMessage(HttpStatusCode.TooManyRequests)
+            {
+                Content = new StringContent("Dont come back!")
+            }
+        ]);
+
+        var sut = new FundaPartnerApiClient(new HttpClient(testHttpMessageHandler),
+            new Uri("https://localhost:8080/doesn-matter-for-these-tests"),
+            "key-doesnt-matter-here");
+
+        var results = sut.GetAllResultsAsync("test", "/whatever/irrelevant/");
+
+        // NB exception won't be thrown if you don't iterate the results
+        await Assert.ThrowsAsync<HttpRequestException>(async () => 
+        { 
+            await foreach (var listingsBatch in results) { } 
+        }); 
+    }
+
     private async Task AssertOnResultsAsync(IAsyncEnumerable<Listing[]> results,
         int expectedTotal)
     {
