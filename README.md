@@ -1,5 +1,7 @@
 # funda-aggregator
 
+## Assignment
+
 The funda API returns information about the objects that are listed on funda.nl which are for sale.
 
 An example of one of the URLs in our REST API is:
@@ -18,3 +20,13 @@ top 10. Then do the same thing but only for objects with a tuin which are listed
 For the
 assignment you may write a program in any object oriented language of your choice and you may
 use any libraries that you find useful.
+
+## How to run
+
+```
+git clone https://github.com/marco-bergantin/funda-aggregator.git
+cd .\funda-aggregator\FundaAggregator\FundaAggregator\
+dotnet user-secrets set 'FundaPartnerApiKey' '<your-key-here>'
+dotnet run "koop" "/amsterdam/"
+dotnet run "koop" "/amsterdam/tuin/"
+```
