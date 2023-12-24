@@ -1,3 +1,4 @@
+using FundaAggregator.Helpers;
 using FundaAggregator.Model;
 using FundaAggregator.Tests.Helpers;
 using System.Net;
@@ -19,7 +20,8 @@ public class FundaPartnerApiClientTests
 
         var sut = new FundaPartnerApiClient(new HttpClient(testHttpMessageHandler),
             new Uri("https://localhost:8080/doesn-matter-for-these-tests"),
-            "key-doesnt-matter-here");
+            "key-doesnt-matter-here",
+            RetryStrategyOptionsProvider.GetOptions());
 
         var results = await sut.GetResultsAsync("test", "/whatever/irrelevant/");
 
@@ -86,7 +88,8 @@ public class FundaPartnerApiClientTests
 
         var sut = new FundaPartnerApiClient(new HttpClient(testHttpMessageHandler),
             new Uri("https://localhost:8080/doesn-matter-for-these-tests"),
-            "key-doesnt-matter-here");
+            "key-doesnt-matter-here",
+            RetryStrategyOptionsProvider.GetOptions());
 
         var results = sut.GetAllResultsAsync("test", "/whatever/irrelevant/");
 
@@ -175,7 +178,8 @@ public class FundaPartnerApiClientTests
 
         var sut = new FundaPartnerApiClient(new HttpClient(testHttpMessageHandler),
             new Uri("https://localhost:8080/doesn-matter-for-these-tests"),
-            "key-doesnt-matter-here");
+            "key-doesnt-matter-here",
+            RetryStrategyOptionsProvider.GetOptions(maxSecondsDelay: 1));
 
         var results = sut.GetAllResultsAsync("test", "/whatever/irrelevant/");
 
@@ -185,7 +189,7 @@ public class FundaPartnerApiClientTests
     }
 
     [Fact]
-    public async Task TestApiClient_GetAllResultsAsync_FailsAfter4ConsecutiveErrors()
+    public async Task TestApiClient_GetAllResultsAsync_FailsAfterTooManyErrors()
     {
         var testHttpMessageHandler = new TestHttpMessageHandler([
             new HttpResponseMessage(HttpStatusCode.InternalServerError)
@@ -216,7 +220,8 @@ public class FundaPartnerApiClientTests
 
         var sut = new FundaPartnerApiClient(new HttpClient(testHttpMessageHandler),
             new Uri("https://localhost:8080/doesn-matter-for-these-tests"),
-            "key-doesnt-matter-here");
+            "key-doesnt-matter-here",
+            RetryStrategyOptionsProvider.GetOptions(maxSecondsDelay: 1));
 
         var results = sut.GetAllResultsAsync("test", "/whatever/irrelevant/");
 

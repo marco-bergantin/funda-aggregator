@@ -10,11 +10,11 @@ public class ResultsAggregatorTests
     {
         using var fileStream = File.OpenRead(@"..\..\..\Assets\example-reponse-for-aggregation.json");
         
-        var parsedResults = JsonSerializer.DeserializeAsyncEnumerable<Listing[]>(fileStream);
+        var parsedResults = await JsonSerializer.DeserializeAsync<Listing[]>(fileStream);
 
         Assert.NotNull(parsedResults);
 
-        var topMakelaars = await ResultsAggregator.GetTopMakelaars(parsedResults!, 2);
+        var topMakelaars = ResultsAggregator.GetTopMakelaars(parsedResults!, 2);
 
         Assert.Equal(2, topMakelaars.Count());
 
