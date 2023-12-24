@@ -14,7 +14,7 @@ public static class RetryStrategyOptionsProvider
             UseJitter = true,
             ShouldHandle = new PredicateBuilder().Handle<HttpRequestException>(),
             MaxRetryAttempts = 5,
-            MaxDelay = maxSecondsDelay < 0 || maxSecondsDelay > MaxDelayAllowedInSconds
+            MaxDelay = maxSecondsDelay <= 0 || maxSecondsDelay > MaxDelayAllowedInSconds
                 ? throw new ArgumentException($"{nameof(maxSecondsDelay)} must be a positive int lower than {MaxDelayAllowedInSconds}")
                 : TimeSpan.FromSeconds(maxSecondsDelay)
         };

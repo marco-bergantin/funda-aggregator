@@ -11,7 +11,7 @@ var config = new ConfigurationBuilder()
 
 if (args.Length < 2)
 {
-    Console.WriteLine("Please provide at least 2 parameters: " +
+    Console.WriteLine("Please provide two parameters: " +
         "one for type of search (e.g. 'koop') and one for search query " +
         "(zoekopdracht, e.g. '/amsterdam/tuin/')");
     return 1;
@@ -57,26 +57,26 @@ try
 
     Console.WriteLine($"Fetching results from funda partner api for type {typeSearch}, search query {searchQuery}");
     Console.WriteLine(Environment.NewLine);
+    Console.WriteLine("| ListingId | Postcode | Price | MakelaarId | MakelaarName |");
 
-    var listings = new List<Listing>();
-
+    var aggregator = new ResultsAggregator();
     var results = apiClient.GetAllResultsAsync(typeSearch, searchQuery);
+
     await foreach (var listingsBatch in results)
     {
-        listings.AddRange(listingsBatch);
+        aggregator.ProcessListingsBatch(listingsBatch);
 
         var tableRows = string.Join(Environment.NewLine, listingsBatch.Select(o =>
-            $"| {o.Id} | {o.Adres} | {o.Koopprijs} | {o.MakelaarId} | {o.MakelaarNaam} |"));
+            $"| {o.GlobalId} | {o.Postcode} | {o.Koopprijs} | {o.MakelaarId} | {o.MakelaarNaam} |"));
 
         Console.WriteLine(tableRows);
     }
 
+    var aggregatedResults = aggregator.GetTopMakelaars(10);
+
     Console.WriteLine(Environment.NewLine);
-    Console.WriteLine("Processing results...");
-
-    var aggregatedResults = ResultsAggregator.GetTopMakelaars(listings, 10);
-
     Console.WriteLine("TOP 10 Makelaars");
+    Console.WriteLine("| Id | Total Listings |");
 
     var top10MakelaarsTable = string.Join(Environment.NewLine,
         aggregatedResults.Select(makelaarData => $"| {makelaarData.Key} | {makelaarData.Value} |"));

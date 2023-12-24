@@ -4,22 +4,25 @@ namespace FundaAggregator;
 
 public class ResultsAggregator
 {
-    public static IEnumerable<KeyValuePair<int, int>> GetTopMakelaars(IEnumerable<Listing> listings, int top)
-    {
-        var listingsPerMakelaar = new Dictionary<int, int>();
+    private readonly Dictionary<int, int> _listingsPerMakelaar = [];
 
-        foreach (var listing in listings)
+    public void ProcessListingsBatch(IEnumerable<Listing> listingsBatch)
+    {
+        foreach (var listing in listingsBatch)
         {
-            if (listingsPerMakelaar.TryGetValue(listing.MakelaarId, out int value))
+            if (_listingsPerMakelaar.TryGetValue(listing.MakelaarId, out int value))
             {
-                listingsPerMakelaar[listing.MakelaarId] = ++value;
+                _listingsPerMakelaar[listing.MakelaarId] = ++value;
             }
             else
             {
-                listingsPerMakelaar.Add(listing.MakelaarId, 1);
+                _listingsPerMakelaar.Add(listing.MakelaarId, 1);
             }
         }
+    }
 
-        return listingsPerMakelaar.OrderByDescending(pair => pair.Value).Take(top);
+    public IEnumerable<KeyValuePair<int, int>> GetTopMakelaars(uint top)
+    {
+        return _listingsPerMakelaar.OrderByDescending(pair => pair.Value).Take((int)top);
     }
 }

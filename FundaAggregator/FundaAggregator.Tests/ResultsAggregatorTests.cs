@@ -14,14 +14,24 @@ public class ResultsAggregatorTests
 
         Assert.NotNull(parsedResults);
 
-        var topMakelaars = ResultsAggregator.GetTopMakelaars(parsedResults!, 2);
+        var sut = new ResultsAggregator();
+
+        // process the same batch multiple times to test aggregation
+        sut.ProcessListingsBatch(parsedResults);
+        sut.ProcessListingsBatch(parsedResults);
+        sut.ProcessListingsBatch(parsedResults);
+
+        var topMakelaars = sut.GetTopMakelaars(2);
+
+        const int expectedTopMakelaarId = 24594;
+        const int expectedSecondMakelaarId = 24585;
 
         Assert.Equal(2, topMakelaars.Count());
 
-        Assert.Equal(24594, topMakelaars.First().Key);
-        Assert.Equal(2, topMakelaars.First().Value);
+        Assert.Equal(expectedTopMakelaarId, topMakelaars.First().Key);
+        Assert.Equal(6, topMakelaars.First().Value);
 
-        Assert.Equal(24585, topMakelaars.ElementAt(1).Key);
-        Assert.Equal(1, topMakelaars.ElementAt(1).Value);
+        Assert.Equal(expectedSecondMakelaarId, topMakelaars.ElementAt(1).Key);
+        Assert.Equal(3, topMakelaars.ElementAt(1).Value);
     }
 }
