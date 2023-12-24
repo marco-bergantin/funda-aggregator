@@ -5,34 +5,18 @@ using System.Net.Http.Json;
 
 namespace FundaAggregator;
 
-public class FundaPartnerApiClient
+public class FundaPartnerApiClient(HttpClient httpClient,
+    Uri baseApiUri, string apiKey, RetryStrategyOptions retryOptions)
 {
     private const int DefaultPageSize = 25;
 
-    private readonly ResiliencePipeline _retryPipeline;
-    private readonly HttpClient _httpClient;
-    private readonly Uri _baseApiUri;
-    private readonly string _key;
+    private readonly HttpClient _httpClient = httpClient;
+    private readonly Uri _baseApiUri = baseApiUri;
+    private readonly string _key = apiKey;
 
-    public FundaPartnerApiClient(HttpClient httpClient, Uri baseApiUri, string apiKey)
-    {
-        _httpClient = httpClient;
-        _baseApiUri = baseApiUri;
-        _key = apiKey;
-
-        var retryOptions = new RetryStrategyOptions
-        {
-            MaxRetryAttempts = 5,
-            MaxDelay = TimeSpan.FromSeconds(10),
-            BackoffType = DelayBackoffType.Exponential,
-            UseJitter = true,
-            ShouldHandle = new PredicateBuilder().Handle<HttpRequestException>()
-        };
-
-        _retryPipeline = new ResiliencePipelineBuilder()
-            .AddRetry(retryOptions)
-            .Build();
-    }
+    private readonly ResiliencePipeline _retryPipeline = new ResiliencePipelineBuilder()
+        .AddRetry(retryOptions)
+        .Build();
 
     public async Task<ApiResultObject?> GetResultsAsync(string type, 
         string searchQuery, int page = 1, int pageSize = DefaultPageSize)
@@ -63,6 +47,11 @@ public class FundaPartnerApiClient
             }
 
             yield return pagedResults.Listings;
+
+            if (pagedResults.Paging is null)
+            {
+                break;
+            }
 
             moreData = pagedResults.Paging.HuidigePagina < pagedResults.Paging.AantalPaginas;
             currentPage = pagedResults.Paging.HuidigePagina + 1;
