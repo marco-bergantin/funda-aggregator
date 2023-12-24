@@ -14,7 +14,7 @@ public class ResultsAggregatorTests
 
         Assert.NotNull(parsedResults);
 
-        var topMakelaars = await ResultsAggregator.GetTopMakelaars(parsedResults, 2);
+        var topMakelaars = await ResultsAggregator.GetTopMakelaars(parsedResults!, 2);
 
         Assert.Equal(2, topMakelaars.Count());
 

@@ -1,14 +1,9 @@
 ﻿namespace FundaAggregator.Tests.Helpers;
 
-internal class TestHttpMessageHandler : HttpMessageHandler
+internal class TestHttpMessageHandler(HttpResponseMessage[] httpResponseMessages) : HttpMessageHandler
 {
-    private readonly HttpResponseMessage[] _httpResponseMessages;
+    private readonly HttpResponseMessage[] _httpResponseMessages = httpResponseMessages;
     private int _requestCounter = 0;
-
-    public TestHttpMessageHandler(HttpResponseMessage[] httpResponseMessages)
-    {
-        _httpResponseMessages = httpResponseMessages;
-    }
 
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {

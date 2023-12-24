@@ -227,7 +227,7 @@ public class FundaPartnerApiClientTests
         }); 
     }
 
-    private async Task AssertOnResultsAsync(IAsyncEnumerable<Listing[]> results,
+    private static async Task AssertOnResultsAsync(IAsyncEnumerable<Listing[]> results,
         int expectedTotal)
     {
         var totalCounter = 0;
