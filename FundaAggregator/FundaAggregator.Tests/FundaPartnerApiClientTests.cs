@@ -200,9 +200,17 @@ public class FundaPartnerApiClientTests
             {
                 Content = new StringContent("Come back later")
             },
+            new HttpResponseMessage(HttpStatusCode.Unauthorized)
+            {
+                Content = new StringContent("Whacky throttling")
+            },
             new HttpResponseMessage(HttpStatusCode.TooManyRequests)
             {
                 Content = new StringContent("Dont come back!")
+            },
+            new HttpResponseMessage(HttpStatusCode.Forbidden)
+            {
+                Content = new StringContent("Whackier throttling")
             }
         ]);
 
@@ -212,9 +220,9 @@ public class FundaPartnerApiClientTests
 
         var results = sut.GetAllResultsAsync("test", "/whatever/irrelevant/");
 
-        // NB exception won't be thrown if you don't iterate the results
         await Assert.ThrowsAsync<HttpRequestException>(async () => 
-        { 
+        {
+            // NB exception won't be thrown if you don't materialize the results
             await foreach (var listingsBatch in results) { } 
         }); 
     }

@@ -59,7 +59,7 @@ try
     await foreach (var listingsBatch in results)
     {
         var tableRows = string.Join(Environment.NewLine, listingsBatch.Select(o =>
-            $"| {o.Id} | {o.Adres} | {o.KoopprijsTot} | {o.MakelaarId} | {o.MakelaarNaam} |"));
+            $"| {o.Id} | {o.Adres} | {o.Koopprijs} | {o.MakelaarId} | {o.MakelaarNaam} |"));
 
         Console.WriteLine(tableRows);
     }

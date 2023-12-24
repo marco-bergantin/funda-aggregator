@@ -20,11 +20,17 @@ public class FundaPartnerApiClient
         _baseApiUri = baseApiUri;
         _key = apiKey;
 
+        var retryOptions = new RetryStrategyOptions
+        {
+            MaxRetryAttempts = 5,
+            MaxDelay = TimeSpan.FromSeconds(10),
+            BackoffType = DelayBackoffType.Exponential,
+            UseJitter = true,
+            ShouldHandle = new PredicateBuilder().Handle<HttpRequestException>()
+        };
+
         _retryPipeline = new ResiliencePipelineBuilder()
-            .AddRetry(new RetryStrategyOptions
-            {
-                Delay = TimeSpan.FromMilliseconds(50)
-            })
+            .AddRetry(retryOptions)
             .Build();
     }
 
