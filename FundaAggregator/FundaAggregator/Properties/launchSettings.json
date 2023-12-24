@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FundaAggregator": {
+      "commandName": "Project",
+      "commandLineArgs": "koop /amsterdam/tuin"
+    }
+  }
+}
