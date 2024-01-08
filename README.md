@@ -4,7 +4,7 @@
 
 The funda API returns information about the objects that are listed on funda.nl which are for sale.
 
-An example of one of the URLs in our REST API is:
+An example of one of the URLs in our REST API is:  
 http://partnerapi.funda.nl/feeds/Aanbod.svc/[key]/?type=koop&zo=/amsterdam/tuin/&page=1&pagesize=25
 
 Most of the parameters that you can pass are self explanatory. The parameter 'zo' (zoekopdracht or
